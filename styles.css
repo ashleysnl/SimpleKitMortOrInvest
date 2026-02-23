@@ -1170,6 +1170,10 @@ td {
     grid-template-columns: 1fr;
   }
 
+  .dashboard-quick-form {
+    grid-template-columns: 1fr;
+  }
+
   .report-top {
     flex-direction: column;
   }
