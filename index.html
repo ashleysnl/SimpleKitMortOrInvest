@@ -10,12 +10,33 @@
 <body>
   <div class="page-shell">
     <header class="hero">
-      <div>
-        <p class="eyebrow">Vacation Planner</p>
-        <h1 id="heroTripTitle">Trip Dashboard & Timeline</h1>
+      <div class="hero-content">
+        <p class="eyebrow">TravelPlanner</p>
+        <h1 id="heroTripTitle">TravelPlanner</h1>
+        <p class="hero-subtitle">Offline family trip planner — no login, no cloud, no tracking.</p>
+        <p class="hero-proof">Your trip stays on your device (local storage).</p>
         <p class="hero-copy">
-          Plan activities, add extra cost items, track planned vs paid amounts, convert USD to CAD, and print a clean summary report.
+          Plan activities, track shared family costs, compare planned vs paid totals, and print a clean summary report to PDF.
         </p>
+        <div class="hero-cta-row no-print">
+          <button id="startPlanningBtn" class="btn btn-primary" type="button">Start planning</button>
+          <a
+            class="btn btn-secondary control-btn support-link-btn"
+            href="https://buymeacoffee.com/ashleysnl"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="If this saved you from a spreadsheet"
+          >☕ Support</a>
+        </div>
+        <div class="hero-perfect-for" aria-label="Perfect for">
+          <span class="hero-perfect-label">Perfect for:</span>
+          <ul class="hero-perfect-list">
+            <li>Family vacations</li>
+            <li>Budget-conscious trips</li>
+            <li>Privacy-first travelers</li>
+            <li>Planning without internet</li>
+          </ul>
+        </div>
       </div>
       <div class="hero-actions no-print">
         <button id="printReportBtn" class="btn btn-primary">Print / Save as PDF</button>
@@ -27,7 +48,7 @@
           target="_blank"
           rel="noopener noreferrer"
           title="If this saved you from a spreadsheet"
-        >☕ Buy me a coffee</a>
+        >☕ Support</a>
       </div>
     </header>
 
@@ -50,6 +71,45 @@
           <h3 id="dashboardTripTitle">Trip</h3>
           <p id="dashboardTripMeta" class="muted"></p>
         </div>
+
+        <section id="onboardingPanel" class="onboarding-panel no-print" hidden aria-labelledby="onboardingTitle">
+          <div>
+            <h3 id="onboardingTitle">Get started fast</h3>
+            <p class="muted">New here? Try a sample family trip to see how itinerary + budget tracking works, or start with a blank planner.</p>
+          </div>
+          <div class="onboarding-actions">
+            <button id="loadSampleTripBtn" type="button" class="btn btn-primary">Load sample family trip (demo)</button>
+            <button id="startEmptyTripBtn" type="button" class="btn btn-secondary control-btn">Start empty</button>
+            <button id="dismissOnboardingBtn" type="button" class="icon-btn">Dismiss</button>
+          </div>
+        </section>
+
+        <section class="family-budget-card" aria-labelledby="familyBudgetTitle">
+          <div class="family-budget-head">
+            <div>
+              <h3 id="familyBudgetTitle">Family Cost Summary</h3>
+              <p class="muted small-copy">Offline family budget view (CDN totals). Stored locally on this device.</p>
+            </div>
+          </div>
+          <div class="family-budget-grid">
+            <label>
+              Adults
+              <input id="familyAdults" type="number" min="0" step="1" value="2" />
+            </label>
+            <label>
+              Children
+              <input id="familyChildren" type="number" min="0" step="1" value="0" />
+            </label>
+            <label class="checkbox-field family-split-toggle">
+              Cost split detail
+              <span class="checkbox-inline">
+                <input id="familySplitToggle" type="checkbox" />
+                Show per adult / per child breakdown
+              </span>
+            </label>
+          </div>
+          <div id="familyBudgetSummary" class="family-budget-output"></div>
+        </section>
 
         <div class="metric-grid" id="metricGrid"></div>
 
@@ -358,6 +418,11 @@
           <div class="report-metrics" id="reportMetrics"></div>
 
           <div class="report-section">
+            <h4>Family Cost Summary</h4>
+            <div id="reportFamilySummary"></div>
+          </div>
+
+          <div class="report-section">
             <h4>Budget Breakdown</h4>
             <div id="reportBreakdown"></div>
           </div>
@@ -366,6 +431,7 @@
             <h4>Activity Timeline</h4>
             <div id="reportTimeline" class="timeline-report"></div>
           </div>
+          <p class="report-footer-line">Private, local-first trip planning. No login. No tracking.</p>
         </div>
       </section>
     </main>
@@ -422,6 +488,7 @@
       </div>
       <div class="about-modal-content">
         <p>TravelPlanner is a local-first trip planner that stores your data in your browser on your device. There is no login, no cloud account, and no tracking built into the app.</p>
+        <p>Built by a dad from Newfoundland who wanted a private, offline trip planner.</p>
         <ul class="about-list">
           <li>Works on desktop and mobile</li>
           <li>Offline-friendly and printable</li>
@@ -519,7 +586,7 @@
 
   <div id="supportBanner" class="support-banner no-print" hidden role="status" aria-live="polite">
     <div class="support-banner-card">
-      <p id="supportBannerMessage">If TravelPlanner helped you plan faster, consider supporting it ☕</p>
+      <p id="supportBannerMessage">If this saved you from building a spreadsheet, consider supporting it ☕</p>
       <div class="support-banner-actions">
         <a
           id="supportBannerCoffeeLink"
