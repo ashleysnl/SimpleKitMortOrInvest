@@ -1702,9 +1702,9 @@ function renderFamilyBudgetSummary(summary) {
 
   const f = summary.familySummary;
   const stats = [
+    ["Adults", String(f.adults)],
+    ["Children", String(f.children)],
     ["Total travelers", String(f.totalTravelers)],
-    ["Total planned (CDN)", money(f.plannedCad, "CAD")],
-    ["Total paid (CDN)", money(f.paidCad, "CAD")],
     ["Per person (planned)", f.totalTravelers ? money(f.perPersonPlannedCad, "CAD") : "—"],
     ["Per person (paid)", f.totalTravelers ? money(f.perPersonPaidCad, "CAD") : "—"],
   ];
@@ -1716,7 +1716,15 @@ function renderFamilyBudgetSummary(summary) {
     stats.push(["Per child (paid)", f.children ? money(f.perChildPaidCad, "CAD") : "—"]);
   }
 
-  el.familyBudgetSummary.innerHTML = stats
+  const totalsLine = `
+    <div class="family-budget-totals">
+      <span><strong>Planned:</strong> ${money(f.plannedCad, "CAD")}</span>
+      <span><strong>Paid:</strong> ${money(f.paidCad, "CAD")}</span>
+      <span><strong>Outstanding:</strong> ${money(Math.max(0, f.plannedCad - f.paidCad), "CAD")}</span>
+    </div>
+  `;
+
+  const cards = stats
     .map(
       ([label, value]) => `
         <div class="family-stat">
@@ -1726,6 +1734,8 @@ function renderFamilyBudgetSummary(summary) {
       `
     )
     .join("");
+
+  el.familyBudgetSummary.innerHTML = `${totalsLine}<div class="family-budget-cards">${cards}</div>`;
 }
 
 function renderOnboardingPanel() {

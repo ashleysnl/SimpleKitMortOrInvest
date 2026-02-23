@@ -315,6 +315,27 @@ body {
 .family-budget-output {
   margin-top: 10px;
   display: grid;
+  gap: 8px;
+}
+
+.family-budget-totals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  border: 1px solid #edf2fb;
+  border-radius: 12px;
+  background: #f8fbff;
+  padding: 8px 10px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+
+.family-budget-totals strong {
+  color: var(--ink);
+}
+
+.family-budget-cards {
+  display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
 }
@@ -1582,7 +1603,7 @@ td {
   }
 
   .family-budget-grid,
-  .family-budget-output {
+  .family-budget-cards {
     grid-template-columns: 1fr 1fr;
   }
 
@@ -1688,7 +1709,7 @@ td {
   }
 
   .family-budget-grid,
-  .family-budget-output {
+  .family-budget-cards {
     grid-template-columns: 1fr;
   }
 
