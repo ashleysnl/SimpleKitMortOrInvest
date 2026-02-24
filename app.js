@@ -2127,9 +2127,19 @@ function renderDashboard(summary) {
           };
         });
 
-        const gradient = segments
-          .map((seg) => `${seg.color} ${seg.start.toFixed(2)}% ${seg.end.toFixed(2)}%`)
-          .join(", ");
+        const donutRadius = 48;
+        const donutStroke = 24;
+        const donutSize = 120;
+        const circumference = 2 * Math.PI * donutRadius;
+        const svgSegments = segments
+          .map((seg) => {
+            const fraction = Math.max(0, seg.share) / 100;
+            if (fraction <= 0) return "";
+            const dash = Math.max(0, fraction * circumference);
+            const offset = -(Math.max(0, seg.start) / 100) * circumference;
+            return `<circle cx="${donutSize / 2}" cy="${donutSize / 2}" r="${donutRadius}" fill="none" stroke="${seg.color}" stroke-width="${donutStroke}" stroke-linecap="butt" stroke-dasharray="${dash} ${Math.max(0, circumference - dash)}" stroke-dashoffset="${offset}"></circle>`;
+          })
+          .join("");
 
         const legend = segments
           .map(
@@ -2147,7 +2157,11 @@ function renderDashboard(summary) {
         return `
           <div class="donut-breakdown">
             <div class="donut-wrap">
-              <div class="donut-chart" style="background: conic-gradient(${gradient});">
+              <div class="donut-chart" aria-label="Forecast category breakdown donut chart">
+                <svg class="donut-svg" viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+                  <circle cx="60" cy="60" r="${donutRadius}" fill="none" stroke="#edf2fb" stroke-width="${donutStroke}"></circle>
+                  ${svgSegments}
+                </svg>
                 <div class="donut-hole">
                   <span class="donut-label">Forecast</span>
                   <strong>${compactDisplayFromCad(summary.plannedCad)}</strong>
