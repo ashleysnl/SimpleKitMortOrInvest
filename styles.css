@@ -652,12 +652,13 @@ body {
   -webkit-min-logical-width: calc(100% - 18px);
   block-size: 38px;
   font-size: 0.9rem;
-  padding-right: 6px;
-  display: block;
+  /* iOS Safari can overflow temporal inputs when padding is applied to the host input. */
+  padding: 0;
+  -webkit-appearance: textfield;
 }
 
 .control-panel .stack-form input[type="date"]::-webkit-datetime-edit {
-  padding: 0;
+  padding: 0 8px;
 }
 
 .control-panel .stack-form input[type="date"]::-webkit-date-and-time-value {
@@ -1341,15 +1342,16 @@ textarea {
   min-inline-size: 0;
   -webkit-min-logical-width: calc(100% - 18px);
   font-size: 0.9rem;
-  padding-right: 6px;
-  display: block;
+  /* iOS Safari can overflow temporal inputs when padding is applied to the host input. */
+  padding: 0;
+  -webkit-appearance: textfield;
 }
 
 .activity-form input[type="date"]::-webkit-datetime-edit,
 .activity-form input[type="time"]::-webkit-datetime-edit,
 .dashboard-quick-form input[type="date"]::-webkit-datetime-edit,
 .dashboard-quick-form input[type="time"]::-webkit-datetime-edit {
-  padding: 0;
+  padding: 0 8px;
 }
 
 .activity-form input[type="date"]::-webkit-date-and-time-value,
