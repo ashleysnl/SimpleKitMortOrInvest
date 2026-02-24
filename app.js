@@ -25,7 +25,7 @@ const demoData = {
     travelers: 4,
     startDate: "2026-04-27",
     endDate: "2026-05-07",
-    totalBudgetCad: 8500,
+    totalBudgetCad: 11000,
     usdToCadRate: 1.36,
   },
   activities: [
@@ -317,6 +317,7 @@ const el = {
   heroTripTitle: document.getElementById("heroTripTitle"),
   dashboardTripTitle: document.getElementById("dashboardTripTitle"),
   dashboardTripMeta: document.getElementById("dashboardTripMeta"),
+  tripSnapshotGrid: document.getElementById("tripSnapshotGrid"),
   dashboardTimelineRange: document.getElementById("dashboardTimelineRange"),
   itineraryComposer: document.getElementById("itineraryComposer"),
   itineraryList: document.getElementById("itineraryList"),
@@ -798,14 +799,7 @@ function startPlanningFromHero() {
 }
 
 function loadSampleTripFromOnboarding() {
-  state = normalizeImportedState(demoData);
-  familyPrefs = { adults: 2, children: 2, splitByRole: true };
-  saveFamilyPrefs();
-  localStorage.setItem(ONBOARDING_DISMISSED_KEY, "1");
-  uiState.onboardingVisible = false;
-  saveState();
-  switchTab("dashboard");
-  render();
+  loadSampleTrip({ dismissOnboarding: true, targetTab: "dashboard", confirmReplace: true });
 }
 
 function startEmptyTripFromOnboarding() {
@@ -1121,7 +1115,11 @@ function renderItineraryList(summary) {
           `
         )
         .join("")
-    : `<div class="itinerary-empty muted">No itinerary items yet. Add your first item to start planning.</div>`;
+    : renderActionEmptyState({
+        title: "No itinerary items yet",
+        body: "Add your first activity to start planning your trip timeline.",
+        actionPrefix: "itineraryEmpty",
+      });
 
   if (uiState.itineraryFormPlacement?.type === "edit" && uiState.itineraryEditId) {
     const active = summary.activities.find((item) => item.id === uiState.itineraryEditId);
@@ -1741,6 +1739,130 @@ function syncSettingsInputs() {
   }
 }
 
+function renderTripSnapshot(summary) {
+  if (!el.tripSnapshotGrid) return;
+
+  const travelerCount = Math.max(0, Number(summary.familySummary?.totalTravelers) || Number(state.settings.travelers) || 0);
+  const hasCosts = Number(summary.plannedCad) > 0 || Number(summary.paidCad) > 0;
+  const hasDates = Boolean(summary.tripDays);
+  const hasActivities = (summary.activities || []).length > 0;
+
+  const snapshotItems = [
+    {
+      label: "Total Trip Cost",
+      value: hasCosts ? money(summary.plannedCad, "CAD") : "—",
+      sub: hasCosts ? "Planned total" : "Add costs to calculate",
+    },
+    {
+      label: "Total Paid",
+      value: hasCosts ? money(summary.paidCad, "CAD") : "—",
+      sub: hasCosts ? "Paid so far" : "Add costs to calculate",
+    },
+    {
+      label: "Cost per person",
+      value: hasCosts && travelerCount > 0 ? money(summary.familySummary.perPersonPlannedCad, "CAD") : "—",
+      sub: travelerCount > 0 ? `${travelerCount} traveler${travelerCount === 1 ? "" : "s"}` : "Set adults and kids",
+    },
+    {
+      label: "Trip length",
+      value: hasDates ? `${summary.tripDays} day${summary.tripDays === 1 ? "" : "s"}` : "—",
+      sub: hasDates ? "Includes start + end date" : "Set dates to calculate",
+      title: "Trip length includes both the start and end dates.",
+    },
+    {
+      label: "Activities",
+      value: String((summary.activities || []).length || 0),
+      sub: hasActivities ? "Itinerary items" : "Add your first activity",
+    },
+  ];
+
+  el.tripSnapshotGrid.innerHTML = snapshotItems
+    .map(
+      (item) => `
+        <article class="trip-snapshot-item"${item.title ? ` title="${escapeHtml(item.title)}"` : ""}>
+          <p class="label">${item.label}</p>
+          <p class="value">${item.value}</p>
+          <p class="sub">${item.sub}</p>
+        </article>
+      `
+    )
+    .join("");
+}
+
+function hasMeaningfulTripData() {
+  const s = state.settings || {};
+  return Boolean(
+    (s.tripName || "").trim() ||
+      s.startDate ||
+      s.endDate ||
+      (Number(s.totalBudgetCad) || 0) > 0 ||
+      (state.activities || []).length ||
+      (state.costItems || []).length
+  );
+}
+
+function isCurrentTripDemoLike() {
+  return (
+    state?.settings?.tripName === demoData.settings.tripName &&
+    (state.activities || []).length === demoData.activities.length &&
+    (state.costItems || []).length === demoData.costItems.length
+  );
+}
+
+function confirmExampleReplaceIfNeeded() {
+  if (!hasMeaningfulTripData()) return true;
+  if (isCurrentTripDemoLike()) return true;
+  return window.confirm("Loading the example will replace your current trip data. Continue?");
+}
+
+function loadSampleTrip({ dismissOnboarding = false, targetTab = "dashboard", confirmReplace = true } = {}) {
+  if (confirmReplace && !confirmExampleReplaceIfNeeded()) return false;
+  state = normalizeImportedState(demoData);
+  familyPrefs = { adults: 2, children: 2, splitByRole: true };
+  saveFamilyPrefs();
+  if (dismissOnboarding) {
+    localStorage.setItem(ONBOARDING_DISMISSED_KEY, "1");
+    uiState.onboardingVisible = false;
+  }
+  saveState();
+  switchTab(targetTab);
+  render();
+  return true;
+}
+
+function startFirstActivityFromEmptyState() {
+  switchTab("itinerary");
+  showItineraryNewItemForm();
+  render();
+  requestAnimationFrame(() => el.activityInputs.title?.focus());
+}
+
+function renderActionEmptyState({ title, body, actionPrefix = "emptyState" }) {
+  return `
+    <div class="action-empty-state" role="status">
+      <strong>${escapeHtml(title)}</strong>
+      <p class="muted">${escapeHtml(body)}</p>
+      <p class="muted small-copy">Start small — add flights, hotel, and one activity.</p>
+      <div class="action-empty-buttons">
+        <button type="button" class="btn btn-primary" data-action="${actionPrefix}AddFirstActivity">Add your first activity</button>
+        <button type="button" class="btn btn-secondary control-btn" data-action="${actionPrefix}LoadExample">Load example trip</button>
+      </div>
+    </div>
+  `;
+}
+
+function handleEmptyStateAction(action) {
+  if (action.endsWith("AddFirstActivity")) {
+    startFirstActivityFromEmptyState();
+    return true;
+  }
+  if (action.endsWith("LoadExample")) {
+    loadSampleTrip({ dismissOnboarding: true, targetTab: "dashboard", confirmReplace: true });
+    return true;
+  }
+  return false;
+}
+
 function renderFamilyBudgetSummary(summary) {
   if (el.familyAdults) el.familyAdults.value = String(Math.max(0, Number(familyPrefs.adults) || 0));
   if (el.familyChildren) el.familyChildren.value = String(Math.max(0, Number(familyPrefs.children) || 0));
@@ -1792,7 +1914,7 @@ function renderDashboard(summary) {
   const s = state.settings;
   const days = summary.tripDays ? `${summary.tripDays} day${summary.tripDays === 1 ? "" : "s"}` : "Dates TBD";
   const travelerCount = summary.familySummary.totalTravelers || s.travelers || 1;
-  el.heroTripTitle.textContent = "TravelPlanner";
+  el.heroTripTitle.textContent = "Plan your family vacation without spreadsheets.";
   el.dashboardTripTitle.textContent = s.tripName || "Trip";
   el.dashboardTripMeta.textContent = `${shortDate(s.startDate)} to ${shortDate(s.endDate)} • ${travelerCount} traveler(s) • ${days}`;
   renderOnboardingPanel();
@@ -1882,7 +2004,11 @@ function renderDashboard(summary) {
           </div>
         `;
       })()
-    : `<p class="muted">Add activities or cost items to see a category breakdown.</p>`;
+    : renderActionEmptyState({
+        title: "No budget breakdown yet",
+        body: "Add activities or cost items to see your category breakdown.",
+        actionPrefix: "budgetEmpty",
+      });
 
   const plannedPct = summary.budgetCad > 0 ? (summary.plannedCad / summary.budgetCad) * 100 : 0;
   const paidPct = summary.budgetCad > 0 ? (summary.paidCad / summary.budgetCad) * 100 : 0;
@@ -2072,6 +2198,7 @@ function render() {
   refreshCategorySelectOptions();
   syncSettingsInputs();
   const summary = calculateSummary();
+  renderTripSnapshot(summary);
   renderDashboard(summary);
   renderItineraryList(summary);
   renderCostsList(summary);
@@ -2252,6 +2379,8 @@ function handleItineraryListClick(event) {
   if (!button) return;
   const { action, id } = button.dataset;
 
+  if (handleEmptyStateAction(action)) return;
+
   if (action === "showItineraryNewItem") {
     showItineraryNewItemForm();
     render();
@@ -2305,6 +2434,8 @@ function handleCostsListClick(event) {
   if (!button) return;
   const { action, id } = button.dataset;
 
+  if (handleEmptyStateAction(action)) return;
+
   if (action === "showCostNewItem") {
     showCostNewItemForm();
     render();
@@ -2326,12 +2457,14 @@ function handleCostsListClick(event) {
   }
 }
 
+function handleCategoryBreakdownClick(event) {
+  const button = event.target.closest("button[data-action]");
+  if (!button) return;
+  handleEmptyStateAction(button.dataset.action || "");
+}
+
 function resetDemoData() {
-  state = normalizeImportedState(demoData);
-  familyPrefs = { adults: 2, children: 2, splitByRole: true };
-  saveFamilyPrefs();
-  saveState();
-  render();
+  loadSampleTrip({ dismissOnboarding: false, targetTab: "dashboard", confirmReplace: true });
 }
 
 function dismissOnboardingPanelOnly() {
@@ -2660,6 +2793,7 @@ el.itineraryComposer?.addEventListener("click", handleItineraryListClick);
 el.costItemsTableBody.addEventListener("click", handleCostItemsTableClick);
 el.costsList?.addEventListener("click", handleCostsListClick);
 el.costsComposer?.addEventListener("click", handleCostsListClick);
+el.categoryBreakdown?.addEventListener("click", handleCategoryBreakdownClick);
 el.dashboardItinerary.addEventListener("click", handleDashboardTimelineClick);
 el.dashboardItinerary.addEventListener("keydown", handleDashboardTimelineKeydown);
 el.dashboardDayDetail.addEventListener("click", handleDashboardDayModalClick);

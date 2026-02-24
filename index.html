@@ -11,13 +11,10 @@
   <div class="page-shell">
     <header class="hero">
       <div class="hero-content">
-        <p class="eyebrow">Private • Local-first • Family budget</p>
-        <h1 id="heroTripTitle">TravelPlanner</h1>
-        <p class="hero-subtitle">Offline family trip planner — no login, no cloud, no tracking.</p>
-        <p class="hero-proof">Your trip stays on your device (local storage).</p>
-        <p class="hero-copy">
-          Plan activities, track shared family costs, compare planned vs paid totals, and print a clean summary report to PDF.
-        </p>
+        <p class="eyebrow">TravelPlanner • Family budget • Local-first</p>
+        <h1 id="heroTripTitle">Plan your family vacation without spreadsheets.</h1>
+        <p class="hero-subtitle">Offline • No login • Your data stays on your device</p>
+        <p class="hero-proof">Private, local-first trip planning. No cloud. No tracking.</p>
         <div class="hero-cta-row no-print">
           <button id="startPlanningBtn" class="btn btn-primary" type="button">Start planning</button>
           <a
@@ -44,6 +41,20 @@
         <button id="aboutAppBtn" type="button" class="btn btn-secondary control-btn">About</button>
       </div>
     </header>
+
+    <section class="trip-snapshot no-print" aria-labelledby="tripSnapshotTitle">
+      <div class="trip-snapshot-head">
+        <div>
+          <h2 id="tripSnapshotTitle">Trip Snapshot</h2>
+          <p class="muted small-copy">Quick totals for your trip budget and plan progress.</p>
+        </div>
+        <div class="offline-badge-wrap" aria-label="Offline storage status">
+          <span class="offline-badge">Works offline (even on flights)</span>
+          <span class="offline-badge-note">Your data is stored locally in your browser.</span>
+        </div>
+      </div>
+      <div id="tripSnapshotGrid" class="trip-snapshot-grid" aria-live="polite"></div>
+    </section>
 
     <main class="tabbed-layout">
       <nav class="tabs no-print" aria-label="App Sections">
@@ -110,11 +121,11 @@
         <div class="metric-grid" id="metricGrid"></div>
 
         <div class="breakdown-wrap">
-          <div class="subsection">
+          <div class="subsection dashboard-category-panel">
             <h3>Category Breakdown (Planned)</h3>
             <div id="categoryBreakdown" class="category-list"></div>
           </div>
-          <div class="subsection">
+          <div class="subsection dashboard-budget-panel">
             <h3>Budget Health</h3>
             <div class="progress-card">
               <div class="progress-row">
@@ -503,7 +514,7 @@
       </div>
       <div class="about-modal-content">
         <p>TravelPlanner is a local-first trip planner that stores your data in your browser on your device. There is no login, no cloud account, and no tracking built into the app.</p>
-        <p>Built by a dad from Newfoundland who wanted a private, offline trip planner.</p>
+        <p>Built by a Dad who wanted a simple, private trip planner.</p>
         <ul class="about-list">
           <li>Works on desktop and mobile</li>
           <li>Offline-friendly and printable</li>
