@@ -584,12 +584,19 @@ body {
 
 .control-panel .stack-form label {
   gap: 4px;
+  min-width: 0;
 }
 
 .control-panel .stack-form input,
 .control-panel .stack-form select {
   min-height: 38px;
   padding: 8px 10px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.control-panel .stack-form input[type="date"] {
+  width: 100%;
 }
 
 label {
