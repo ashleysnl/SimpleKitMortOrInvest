@@ -266,6 +266,10 @@ body {
   gap: 10px;
 }
 
+.onboarding-panel[hidden] {
+  display: none !important;
+}
+
 .onboarding-panel h3 {
   margin: 0;
   font-size: 0.95rem;
