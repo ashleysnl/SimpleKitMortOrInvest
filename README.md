@@ -1,114 +1,53 @@
-# TravelPlanner
+# SimpleKit Mortgage vs Invest Calculator
 
-Plan your trip, track your budget, and manage your itinerary — private, simple, and offline. No account required.
+Static SimpleKit app for comparing two uses of extra cash flow:
 
-A local-first travel planning app for itinerary building, budget tracking, and printable trip summaries that runs entirely in your browser.
+- make extra mortgage payments
+- invest the same amount instead
 
-## Try It Now
+The app is built with plain `index.html`, `styles.css`, and `app.js`, keeps the existing SimpleKit visual language, and preserves the Google Analytics head snippet from the template.
 
-- Live demo (GitHub Pages): [https://ashleysnl.github.io/TravelPlanner/](https://ashleysnl.github.io/TravelPlanner/)
-- If the demo link is not live yet, enable GitHub Pages (steps in [Deployment](#deployment)) and GitHub will publish the app at the URL above.
+## What It Includes
 
-## Buy Me a Coffee
+- Canadian-oriented mortgage vs invest comparison
+- live side-by-side results
+- payoff timing and mortgage interest comparison
+- SVG charts for net worth, mortgage balance, investment growth, and outcome summary
+- break-even return estimate and sensitivity table
+- educational copy, Canadian context, FAQ content, related tool links, and support CTA
+- local persistence with `localStorage`
 
-[![Buy Me a Coffee](https://img.shields.io/badge/☕%20Buy%20me%20a%20coffee-Support-FFDD00?style=for-the-badge&logo=buymeacoffee&logoColor=000000)](https://buymeacoffee.com/ashleysnl)
+## Defaults
 
-Plain link: https://buymeacoffee.com/ashleysnl
+Starter defaults model a realistic Canadian homeowner scenario:
 
-## Why TravelPlanner
+- Mortgage balance: `425000`
+- Mortgage rate: `4.75%`
+- Years left: `22`
+- Monthly payment: `2700`
+- Extra monthly amount: `500`
+- Home value: `640000`
+- Expected annual investment return: `5.5%`
+- Time horizon: `10 years`
+- Account type: `TFSA`
+- Tax drag: `0%`
+- MER: `0.25%`
+- Home growth: `2%`
+- Inflation: `2%`
 
-- No login / no account required
-- Offline / local-first (browser storage)
-- Privacy-first (no tracking, no analytics, no cloud dependency)
-- Simple to use and fast to start
-- Works on desktop and mobile
-- Printable trip summary for sharing as PDF
+## Files
 
-## Screenshots
+- `/Users/AshleySkinner/Documents/00_Engineering/04_Code/36_Mortgage Investment Simple Kit/index.html`: page structure, SEO copy, analytics snippet
+- `/Users/AshleySkinner/Documents/00_Engineering/04_Code/36_Mortgage Investment Simple Kit/styles.css`: SimpleKit theme styles and responsive layout
+- `/Users/AshleySkinner/Documents/00_Engineering/04_Code/36_Mortgage Investment Simple Kit/app.js`: calculator logic, rendering, charts, tracking hooks
+- `/Users/AshleySkinner/Documents/00_Engineering/04_Code/36_Mortgage Investment Simple Kit/manifest.webmanifest`: install metadata
+- `/Users/AshleySkinner/Documents/00_Engineering/04_Code/36_Mortgage Investment Simple Kit/sitemap.xml`: sitemap starter
+- `/Users/AshleySkinner/Documents/00_Engineering/04_Code/36_Mortgage Investment Simple Kit/robots.txt`: robots rules and sitemap reference
 
-### Dashboard
+## Before Production Deploy
 
-![TravelPlanner Dashboard](assets/screenshots/dashboard-overview.svg)
+Before production deploy:
 
-### Budget Tracking
-
-![TravelPlanner Budget Breakdown](assets/screenshots/budget-breakdown.svg)
-
-### Itinerary Builder
-
-![TravelPlanner Itinerary Builder](assets/screenshots/itinerary-builder.svg)
-
-### Mobile View
-
-![TravelPlanner Mobile Experience](assets/screenshots/mobile-dashboard.svg)
-
-## Quick Start
-
-### Local (no npm required)
-
-1. Download or clone this repo.
-2. Open `index.html` in your browser.
-3. Start planning immediately. Data is stored locally in your browser.
-
-Optional local server (useful for iPhone testing on your network):
-
-```bash
-cd "TravelPlanner"
-python3 -m http.server 8000 --bind 0.0.0.0
-```
-
-Then open `http://localhost:8000` (or your Mac's LAN IP on iPhone/iPad).
-
-## Deployment
-
-### GitHub Pages (recommended)
-
-1. Push this repo to GitHub (branch: `main`).
-2. Open your GitHub repository settings.
-3. Go to `Settings` -> `Pages`.
-4. Under **Build and deployment**, set:
-   - **Source**: `Deploy from a branch`
-   - **Branch**: `main` / `/ (root)`
-5. Save.
-6. Wait for the GitHub Pages deployment to finish.
-7. Your live app URL will be:
-   - `https://ashleysnl.github.io/TravelPlanner/`
-
-## GitHub Optimization (Suggested)
-
-### Repository description (copy/paste suggestion)
-
-`Offline travel planner, itinerary manager, and trip budget tracker. No login. Privacy-first. Static web app.`
-
-### Suggested topics
-
-`travel`, `itinerary`, `budget`, `offline`, `localstorage`, `javascript`, `webapp`, `planner`, `privacy`, `trip-planner`
-
-## Data & Privacy
-
-- Data is stored in browser `localStorage` on your device
-- JSON backup export/import is included for manual backups and device transfers
-- No login, no tracking, no account, no backend
-
-## Star the Repo
-
-If TravelPlanner was useful, please star the repo so more people can find it.
-
-## Support
-
-If this saved you from building a spreadsheet, consider supporting it ☕
-
-- Buy Me a Coffee: https://buymeacoffee.com/ashleysnl
-
-## More Tools
-
-Other tools (coming soon):
-
-- Budget helpers (coming soon)
-- Family planning templates (coming soon)
-- Printable trackers (coming soon)
-- Travel checklists (coming soon)
-
-## License
-
-MIT License. See [LICENSE](LICENSE).
+- replace `https://replace-with-live-domain.invalid/` in `/Users/AshleySkinner/Documents/00_Engineering/04_Code/36_Mortgage Investment Simple Kit/index.html`, `/Users/AshleySkinner/Documents/00_Engineering/04_Code/36_Mortgage Investment Simple Kit/app.js`, and `/Users/AshleySkinner/Documents/00_Engineering/04_Code/36_Mortgage Investment Simple Kit/sitemap.xml`
+- update `ROUTES.relatedTools` in `/Users/AshleySkinner/Documents/00_Engineering/04_Code/36_Mortgage Investment Simple Kit/app.js` if your published suite uses different public URLs than the current sibling-folder structure
+- replace `TEMPLATE.socialImageUrl` in `/Users/AshleySkinner/Documents/00_Engineering/04_Code/36_Mortgage Investment Simple Kit/app.js` and the matching tags in `/Users/AshleySkinner/Documents/00_Engineering/04_Code/36_Mortgage Investment Simple Kit/index.html` if you want a dedicated PNG/JPG share card instead of `icons/icon.svg`
