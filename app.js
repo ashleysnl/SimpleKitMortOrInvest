@@ -168,7 +168,7 @@ function bindEvents() {
   el.advancedSettings?.addEventListener("toggle", () => {
     trackEvent("toggle_advanced_settings", { open: el.advancedSettings.open ? "true" : "false" });
   });
-  window.addEventListener("resize", scheduleCharts);
+  window.addEventListener("resize", () => scheduleCharts());
 }
 
 function loadState() {
